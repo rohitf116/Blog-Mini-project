@@ -15,7 +15,7 @@ const createBlog = async function(req,res){
         
         })}
 
-        else{res.status(400).send({ status: false, msg: " "})}
+        else{res.status(400).send({ status: false, msg: "Autho_id is Invalid"})}
     } catch(err){
         res.status(400).send(err.message)
     }
