@@ -1,5 +1,7 @@
 const express = require('express'); 
 const router = express.Router();
+const authorController = require('../controller/authorController')
+const blogController = require('../controller/blogController')
 
 
 
@@ -7,6 +9,8 @@ const router = express.Router();
 router.get("/bloging", function  (req,res){
     res.send("Blonging  Api  Strated")
 })
+
+router.post("/authors",    authorController.createAuthor )
 
 
 
