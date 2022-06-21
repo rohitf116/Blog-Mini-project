@@ -15,7 +15,7 @@ const createBlog = async function(req,res){
         
         })}
 
-        else{res.status(400).send({msg: "AuthorId is Invalid"})}
+        else{res.status(400).send({ status: false, msg: " "})}
     } catch(err){
         res.status(400).send(err.message)
     }
