@@ -6,11 +6,12 @@ const blogController = require('../controller/blogController')
 
 
 
-router.get("/bloging", function  (req,res){
-    res.send("Blonging  Api  Strated")
+router.get("/blogging", function  (req,res){
+    res.send("Blogging  Api  Strated")
 })
 
-router.post("/authors",    authorController.createAuthor )
+router.post("/authors", authorController.authors )
+router.post("/createBlog", blogController.createBlog )
 
 
 
