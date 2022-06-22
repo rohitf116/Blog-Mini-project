@@ -4,7 +4,7 @@ const AuthorModel=require('../Model/authorModel')
 exports.createBlog = async function(req,res){
     try{
         let authorId=req.body.author_Id
-        let id=await AuthorModel.find({_id: authorId}).select({_Id:1})
+        let id=await AuthorModel.find({_id: authorId}).select({_id:1})
         let blog=id.map((obj)=>obj._id.toString())
         if (authorId==blog){
         let data = req.body
@@ -17,11 +17,11 @@ exports.createBlog = async function(req,res){
 
         else{res.status(400).send({ status: false, msg: "Autho_id is Invalid"})}
     } catch(err){
-        res.status(400).send(err.message)
+        res.status(500).send(err.message)
     }
 }
 
-exports.blogs = async function (req, res) {
+exports.getBlogs = async function (req, res) {
     try {
       const data = req.query;
       const foundPost = await BlogModel.find({
@@ -72,6 +72,7 @@ catch (err){
 exports.deleteBlogByQuery = async function(req,res){
     try{
     let blogId= req.query
+    console.log(blogId)
     let data = await BlogModel.find({isDeleted:false}).findOneAndUpdate(blogId,{$set:{isDeleted:true}})
     if(data==null || data == undefined) {
         res.status(404).send({status:false,msg:" "})
@@ -80,6 +81,6 @@ exports.deleteBlogByQuery = async function(req,res){
     }
 }
 catch (err){
-    res.status(404).send(err.message)
+    res.status(500).send(err.message)
 }
 } 

@@ -12,7 +12,7 @@ router.get("/blogging", function  (req,res){
 
 router.post("/authors", authorController.authors )
 router.post("/createBlog", blogController.createBlog )
-router.get("/blogs", blogController.blogs)
+router.get("/blogs", blogController.getBlogs)
 
 router.put("/blog/:blogId", blogController.updateblog)
 router.delete("/blog/:blogId", blogController.deleteBlog)
