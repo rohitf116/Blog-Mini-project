@@ -21,5 +21,21 @@ const createBlog = async function(req,res){
     }
 }
 
+exports.blogs = async function (req, res) {
+    try {
+      const data = req.query;
+      const foundPost = await BlogModel.find({
+        isPublished: true,
+        isDeleted: false,
+      }).find(data);
+      if (foundPost.length == 0) {
+        res.status(400).send("Postt not found");
+      } else {
+        res.status(200).send({ status: true, msg: foundPost });
+      }
+    } catch (error) {
+      res.status(400).send(err.message);
+    }
+  };
 
 module.exports.createBlog = createBlog

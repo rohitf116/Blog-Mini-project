@@ -12,6 +12,7 @@ router.get("/blogging", function  (req,res){
 
 router.post("/authors", authorController.authors )
 router.post("/createBlog", blogController.createBlog )
+router.get("/blogs", blogController.blogs)
 
 
 
