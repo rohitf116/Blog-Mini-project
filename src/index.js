@@ -20,8 +20,8 @@ mongoose.connect("mongodb+srv://Deepak:Deepak9162@cluster0.uylkg.mongodb.net/blo
 
 app.use('/',route);
 
-app.listen(process.env.PORT || 8000 ,function () {
-    console.log('Express app running on  port ' + (process.env.PORT || 8000))
+app.listen(process.env.PORT || 3000 ,function () {
+    console.log('Express app running on  port ' + (process.env.PORT || 3000))
 });
 
 

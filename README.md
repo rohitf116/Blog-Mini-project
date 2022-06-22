@@ -129,3 +129,13 @@ Refer below sample
 #### Refer https://jsonplaceholder.typicode.com/guide/ for some fake blogs data.
 
 #### Note: Create a group database and use the same database in connection string by replacing `groupXDatabase
+
+const data = req.params.blogId;
+    const foundPost = await BlogModel.find({
+      isDeleted: false,
+    }).findOneAndUpdate(data, { $set: { isDeleted: true } });
+    if (foundPost.length == 0) {
+      res.status(404).send("Post not found");
+    } else {
+      res.status(200).send({ status: true, msg: " " });
+    }
