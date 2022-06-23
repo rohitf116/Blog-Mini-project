@@ -19,5 +19,6 @@ router.get("/blogs", commonMiddleware.checckForQuery, blogController.getBlogs);
 router.put("/blog/:blogId", blogController.updateblog);
 router.delete("/blog/:blogId", blogController.deleteBlog);
 router.delete("/blog", blogController.deleteBlogByQuery);
+router.post("/login",authorController.loginUser)
 
 module.exports = router;
