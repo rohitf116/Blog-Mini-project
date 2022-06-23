@@ -3,7 +3,7 @@ const router = express.Router();
 const authorController = require("../controller/authorController");
 const blogController = require("../controller/blogController");
 const commonMiddleware = require("../middleware/commonMiddleware");
-const commonMiddleware1 = require("../middleware/auth");
+const auth = require("../middleware/auth");
 const validator = require("../validator/validation");
 
 router.get("/blogging", function (req, res) {
@@ -19,6 +19,7 @@ router.post(
 );
 router.post(
   "/createBlog",
+  auth.authenticate,
   validator.blogValidation,
   commonMiddleware.blogCreation,
   blogController.createBlog
@@ -26,14 +27,14 @@ router.post(
 
 router.put(
   "/blog/:blogId",
-  commonMiddleware1.authenticate,
-  commonMiddleware1.authorise,
+  auth.authenticate,
+  auth.authorise,
   blogController.updateblog
 );
 router.delete(
   "/blog/:blogId",
-  commonMiddleware1.authenticate,
-  commonMiddleware1.authorise,
+  auth.authenticate,
+  auth.authorise,
   blogController.deleteBlog
 );
 router.delete("/blog", blogController.deleteBlogByQuery);

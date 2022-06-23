@@ -9,12 +9,12 @@ exports.createBlog = async function (req, res) {
     if (authorId == blog) {
       let data = req.body;
       let saveData = await BlogModel.create(data);
-      res.status(201).send({
+      return res.status(201).send({
         status: true,
         msg: saveData,
       });
     } else {
-      res.status(400).send({ status: false, msg: "Autho_id is Invalid" });
+      res.status(400).send({ status: false, msg: "author_id is Invalid" });
     }
   } catch (err) {
     res.status(500).send(err.message);
@@ -29,7 +29,7 @@ exports.getBlogs = async function (req, res) {
       isDeleted: false,
     }).find(data);
     if (foundPost.length == 0) {
-      res.status(400).send("Postt not found");
+     return res.status(400).send("Post not found");
     } else {
       res.status(200).send({ status: true, msg: foundPost });
     }
@@ -44,7 +44,7 @@ exports.updateblog = async function (req, res) {
 
     const { title, body, tags, subcategory } = data;
 
-    let blog = await BlogModel.findById(blogId);
+    // let blog = await BlogModel.findById(blogId);
 
     let updatedblog = await BlogModel.find({
       isDeleted: false,
@@ -75,11 +75,13 @@ exports.deleteBlog = async function (req, res) {
       { _id: blogId },
       { $set: { isDeleted: true } }
     );
-    if (data == null || data == undefined) {
-      res.status(404).send({ status: false, msg: " " });
-    } else {
-      res.status(200).send();
-    }
+    (data == null || data == undefined)?res.status(404).send({ status: false, msg: " " }):res.status(200).send()
+
+    // if (data == null || data == undefined) {
+    //  return res.status(404).send({ status: false, msg: " " });
+    // } else {
+    //   res.status(200).send();
+    // }
   } catch (err) {
     res.status(500).send(err.message);
   }

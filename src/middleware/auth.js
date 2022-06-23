@@ -13,6 +13,7 @@ exports.authenticate = function (req, res, next) {
       });
 
     const decodedToken = jwt.verify(token, "functionup-radon");
+    console.log(decodedToken)
     if (!decodedToken)
       return res.send({ status: false, msg: "token is not valid" });
 
