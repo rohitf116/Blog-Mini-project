@@ -11,6 +11,7 @@ exports.blogCreation = (req, res, next) => {
     const data = req.body;
     const keyOf = Object.keys(data);
     const receivedKey = fieldAllowed.filter((x) => !keyOf.includes(x));
+    console.log(receivedKey)
     if (!receivedKey.length) {
       next();
     }

@@ -4,7 +4,7 @@ exports.authenticate = function (req, res, next) {
   try {
     //check the token in request header
     //validate this token
-    console.log(" is die authenticate ");
+    // console.log(" is die authenticate ");
     let token = req.headers["x-api-key"];
     if (!token)
       return res.send({
@@ -32,9 +32,9 @@ exports.authorise = async function (req, res, next) {
       author_Id: 1,
       _id: 0,
     });
-    console.log(isCorrect);
+    // console.log(isCorrect);
     const idOf = isCorrect.author_Id.toString();
-    console.log(idOf);
+    // console.log(idOf);
     if (userLoggedIn == idOf) {
       next();
     } else {

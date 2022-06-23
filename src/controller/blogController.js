@@ -61,7 +61,7 @@ exports.updateblog = async function (req, res) {
       },
       { new: true }
     );
-    console.log(updatedblog);
+    // console.log(updatedblog);
 
     res.status(201).send({ status: true, msg: "done", data: updatedblog });
   } catch (err) {
