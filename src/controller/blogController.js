@@ -34,7 +34,7 @@ exports.getBlogs = async function (req, res) {
       res.status(200).send({ status: true, msg: foundPost });
     }
   } catch (error) {
-    res.status(400).send(err.message);
+    res.status(500).send(err.message);
   }
 };
 exports.updateblog = async function (req, res) {
