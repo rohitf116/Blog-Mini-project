@@ -1,23 +1,3 @@
-exports.checckForQuery = (req, res, next) => {
-  const queryAllowed = ["author_Id", "tags", "subcategory", "category"];
-  const data = req.query;
-  const keyOf = Object.keys(data);
-  const receivedKey = [];
-  for (let i = 0; i < keyOf.length; i++) {
-    for (let j = 0; j < queryAllowed.length; j++) {
-      if (keyOf[i] === queryAllowed[j]) {
-        receivedKey.push(keyOf[i]);
-        break;
-      }
-    }
-  }
-  if (keyOf.length === receivedKey.length) {
-    next();
-  } else {
-    res.status(400).send({ status: "fail", msg: "invalid query" });
-  }
-};
-
 // exports.blogCreation = (req, res, next) => {
 //   try {
 //     const fieldAllowed = [
@@ -77,3 +57,26 @@ exports.blogCreation = (req, res, next) => {
       .send({ status: "fail", msg: `${receivedKey} field is missing` });
   }
 };
+exports.authorCreation = (req, res, next) => {
+  const fieldAllowed = [
+    "fname",
+    "lname",
+    "title",
+    "email",
+    "password"
+    
+  ];
+  const data = req.body;
+  const keyOf = Object.keys(data);
+  const receivedKey = fieldAllowed.filter((x) => !keyOf.includes(x));
+
+ if (!receivedKey.length) {
+    next();
+  }
+  if (receivedKey.length) {
+    res
+      .status(400)
+      .send({ status: "fail", msg: `${receivedKey} field is missing` });
+  }
+};
+
