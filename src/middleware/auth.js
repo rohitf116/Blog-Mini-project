@@ -13,7 +13,7 @@ exports.authenticate = function (req, res, next) {
       });
 
     const decodedToken = jwt.verify(token, "functionup-radon");
-    console.log(decodedToken)
+
     if (!decodedToken)
       return res.send({ status: false, msg: "token is not valid" });
 
@@ -45,5 +45,41 @@ exports.authorise = async function (req, res, next) {
     }
   } catch (error) {
     res.status(500).send(error.message);
+  }
+};
+
+exports.checkFor = function (req, res, next) {
+  const token = req.headers["x-api-key"];
+  const { author_Id } = req.body;
+  if (!token) {
+    res
+      .status(400)
+      .send({ status: "fail", msg: "JWT must be present in here" });
+  } else {
+    const decodedToken = jwt.verify(
+      token,
+      "functionup-radon",
+      { algorithm: "RS256" },
+      function (err, token) {
+        if (err) {
+          return null;
+        } else {
+          return token;
+        }
+      }
+    );
+    if (decodedToken == null) {
+      return res.status(403).send({ status: "fail", msg: "Invalid jwt" });
+    }
+    const userLoggedIn = decodedToken.userId;
+    console.log(userLoggedIn, "+++++++++++++++");
+    console.log(author_Id, "+++++++++++++++");
+    console.log(author_Id == userLoggedIn);
+    author_Id == userLoggedIn
+      ? next()
+      : res.status(400).send({
+          status: "fail",
+          msg: `This user is not allowed to create blog using someone else Id`,
+        });
   }
 };

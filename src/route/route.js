@@ -19,8 +19,9 @@ router.post(
 );
 router.post(
   "/createBlog",
-  auth.authenticate,
   validator.blogValidation,
+  auth.checkFor,
+  auth.authenticate,
   commonMiddleware.blogCreation,
   blogController.createBlog
 );
