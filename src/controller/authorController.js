@@ -16,7 +16,7 @@ const authors = async function (req, res) {
 
 exports.loginUser = async function (req, res) {
   try {
-    let emailId = req.body.email;
+    let email = req.body.email;
     let password = req.body.password;
     if (!email)
       return res
@@ -28,7 +28,7 @@ exports.loginUser = async function (req, res) {
         .send({ status: false, msg: "password must me present" });
 
     let user = await AuthorModel.findOne({
-      email: emailId,
+      email: email,
       password: password
     });
     if (!user) {

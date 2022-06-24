@@ -119,67 +119,68 @@ exports.blogValidation = async function (req, res, next) {
   }
 };
 
-exports.getBlogValidation = async function(req, res , next){
-  try{
+// exports.getBlogValidation = async function(req, res , next){
+//   try{
     // key validation
-      let data = req.query
-      const fieldAllowed = [
-        "title",
-        "body",
-        "author_Id",
-        "tags",
-        "category",
-        "subcategory",
-      ]
-    const keyOf = Object.keys(data);
-    const receivedKey = fieldAllowed.filter((x) => !keyOf.includes(x));
-    console.log(receivedKey)
-    if (receivedKey.length) {
-      return res
-        .status(400)
-        .send({ status: "fail", msg: `${receivedKey} field is missing` });
-    }
+      // let data = req.query
+    //   const fieldAllowed = [
+    //     "title",
+    //     "body",
+    //     "author_Id",
+    //     "tags",
+    //     "category",
+    //     "subcategory",
+    //   ]
+    // const keyOf = Object.keys(data);
+    // const receivedKey = fieldAllowed.filter((x) => !keyOf.includes(x));
+    // console.log(receivedKey)
+    // if (receivedKey.length) {
+    //   return res
+    //     .status(400)
+    //     .send({ status: "fail", msg: `${receivedKey} field is missing` });
+    // }
     // key_value validation
-    let {title, body, author_Id, tags, category, subcategory} = data
-
-    if (!(/^(?=.{1,50})/.test(title))) {  //title validation
-      return res
-        .status(400)
-        .send({ status: false, message: `title  can not be blank` });
-    }
-    if (!(/^(?=.{1,1000})/.test(body))) { //body validation
-      res
-        .status(400)
-        .send({ status: false, message: `body  can not be blank` });
-      return;
-    } 
-    if(author_Id.length != 24) { //author_Id validation
-      res.status(400).send({ status: false, message: `put a valid author_Id` });
-      return;
-    }
-    if (!(/^#?[a-zA-Z0-9 ]+/.test(tags))) { //tags validation
-      res
-        .status(400)
-        .send({ status: false, message: `tags  can not be empty` });
-      return;
-    }
-    if (!(/[A-Za-z][A-Za-z0-9_]{1,29}/.test(category))) { //category validation
-      res
-        .status(400)
-        .send({ status: false, message: `category  can not be empty` });
-      return;
-    }
-    if (!(/^#?[a-zA-Z0-9 ]+/.test(subcategory))) { //subcategory validation
-      res
-        .status(400)
-        .send({ status: false, message: `subcategory  can not be empty` });
-      return;
-    }
-
-    next();
+//     let {title, body, author_Id, tags, category, subcategory} = data
     
-  } catch(err){
-    res.status(500).send(err.message)
-  }
-}
+
+//     if (!(/^(?=.{1,50})/.test(title))) {  //title validation
+//       return res
+//         .status(400)
+//         .send({ status: false, message: `title  can not be blank` });
+//     }
+//     if (!(/^(?=.{1,1000})/.test(body))) { //body validation
+//       res
+//         .status(400)
+//         .send({ status: false, message: `body  can not be blank` });
+//       return;
+//     } 
+//     if(author_Id.length != 24) { //author_Id validation
+//       res.status(400).send({ status: false, message: `put a valid author_Id` });
+//       return;
+//     }
+//     if (!(/^#?[a-zA-Z0-9 ]+/.test(tags))) { //tags validation
+//       res
+//         .status(400)
+//         .send({ status: false, message: `tags  can not be empty` });
+//       return;
+//     }
+//     if (!(/[A-Za-z][A-Za-z0-9_]{1,29}/.test(category))) { //category validation
+//       res
+//         .status(400)
+//         .send({ status: false, message: `category  can not be empty` });
+//       return;
+//     }
+//     if (!(/^#?[a-zA-Z0-9 ]+/.test(subcategory))) { //subcategory validation
+//       res
+//         .status(400)
+//         .send({ status: false, message: `subcategory  can not be empty` });
+//       return;
+//     }
+
+//     next();
+    
+//   } catch(err){
+//     res.status(500).send(err.message)
+//   }
+// }
 

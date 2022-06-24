@@ -23,10 +23,7 @@ router.post(
   auth.authenticate,
   blogController.createBlog
 );
-router.get("/blogs",
- 
-  blogController.getBlogs
-  );
+router.get("/blogs",auth.authenticate,blogController.getBlogs);
 
 router.put(
   "/blog/:blogId",

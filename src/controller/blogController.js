@@ -29,7 +29,7 @@ exports.getBlogs = async function (req, res) {
       isDeleted: false,
     }).find(data);
     if (foundPost.length == 0) {
-     return res.status(400).send("Post not found");
+     return res.status(400).send({message:"Post not found"});
     } else {
       res.status(200).send({ status: true, msg: foundPost });
     }
