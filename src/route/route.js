@@ -20,9 +20,7 @@ router.post(
 router.post(
   "/createBlog",
   validator.blogValidation,
-  auth.checkFor,
   auth.authenticate,
-  commonMiddleware.blogCreation,
   blogController.createBlog
 );
 
@@ -41,4 +39,4 @@ router.delete(
 router.delete("/blog", blogController.deleteBlogByQuery);
 validator.authorValidation;
 
-module.exports = router;
+module.exports = router;  

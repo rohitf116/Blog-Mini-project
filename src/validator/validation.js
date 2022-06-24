@@ -2,7 +2,21 @@
 
 exports.authorValidation = async function (req, res, next) {
   try {
-    let data = req.body;
+    const fieldAllowed = ["fname", "lname", "title", "email", "password"];
+    const data = req.body;
+    const keyOf = Object.keys(data);
+    const receivedKey = fieldAllowed.filter((x) => !keyOf.includes(x));
+
+    if (!receivedKey.length) {
+      console.log("hiiiiii");
+      next();
+    }
+    if (receivedKey.length) {
+      console.log("hiiiiii");
+      res
+        .status(400)
+        .send({ status: "fail", msg: `${receivedKey} field is missing` });
+    }
     const { fname, lname, title, email, password } = data;
 
     if (!/[A-Za-z][A-Za-z0-9_]{1,29}$/.test(fname)) {
@@ -45,8 +59,29 @@ exports.authorValidation = async function (req, res, next) {
 
 exports.blogValidation = async function (req, res, next) {
   try {
-    let data = req.body;
+    const fieldAllowed = [
+      "title",
+      "body",
+      "author_Id",
+      "tags",
+      "category",
+      "subcategory",
+    ];
+    const data = req.body;
+    const keyOf = Object.keys(data);
+    const receivedKey = fieldAllowed.filter((x) => !keyOf.includes(x));
+    console.log(receivedKey)
+    if (!receivedKey.length) {
+      next();
+    }
+    if (receivedKey.length) {
+      res
+        .status(400)
+        .send({ status: "fail", msg: `${receivedKey} field is missing` });
+    }
     const { title, body, author_Id, tags, category, subcategory } = data;
+    console.log(typeof author_Id)
+    console.log(author_Id)
 
     if (!/^(?=.{1,50})/.test(title)) {
       return res

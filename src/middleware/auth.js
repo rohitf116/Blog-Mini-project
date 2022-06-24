@@ -56,10 +56,7 @@ exports.checkFor = function (req, res, next) {
       .status(400)
       .send({ status: "fail", msg: "JWT must be present in here" });
   } else {
-    const decodedToken = jwt.verify(
-      token,
-      "functionup-radon",
-      { algorithm: "RS256" },
+    const decodedToken = jwt.verify(token,"functionup-radon",{ algorithm: "RS256" },
       function (err, token) {
         if (err) {
           return null;
@@ -69,12 +66,12 @@ exports.checkFor = function (req, res, next) {
       }
     );
     if (decodedToken == null) {
-      return res.status(403).send({ status: "fail", msg: "Invalid jwt" });
+      return res.status(403).send({ status: "fail", msg: "Invalid jwt token" });
     }
     const userLoggedIn = decodedToken.userId;
-    console.log(userLoggedIn, "+++++++++++++++");
-    console.log(author_Id, "+++++++++++++++");
-    console.log(author_Id == userLoggedIn);
+    // console.log(userLoggedIn, "+++++++++++++++");
+    // console.log(author_Id, "+++++++++++++++");
+    // console.log(author_Id == userLoggedIn);
     author_Id == userLoggedIn
       ? next()
       : res.status(400).send({
