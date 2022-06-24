@@ -20,6 +20,7 @@ router.post(
 router.post(
   "/createBlog",
   validator.blogValidation,
+  auth.checkFor,
   auth.authenticate,
   blogController.createBlog
 );
