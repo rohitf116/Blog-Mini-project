@@ -14,46 +14,52 @@ exports.createBlog = async function (req, res) {
     const data = req.body;
     const keyOf = Object.keys(data);
     const receivedKey = fieldAllowed.filter((x) => !keyOf.includes(x));
-    console.log(receivedKey)
+    console.log(receivedKey);
     if (receivedKey.length) {
-      res.status(400).send({ status: "fail", msg: `${receivedKey} field is missing` });
+      res
+        .status(400)
+        .send({ status: "fail", msg: `${receivedKey} field is missing` });
     }
     // console.log(typeof author_Id)
     // console.log(author_Id)
 
-   //key_value validation
-    let {title, body, author_Id, tags, category, subcategory} = data
+    //key_value validation
+    let { title, body, author_Id, tags, category, subcategory } = data;
 
     //title validation
-    if (!(/^(?=.{1,50})/.test(title))) {  
+    if (!/^(?=.{1,50})/.test(title)) {
       return res
         .status(400)
         .send({ status: false, message: `title  can not be blank` });
     }
     //body validation
-    if (!(/^(?=.{1,1000})/.test(body))) { 
+    if (!/^(?=.{1,1000})/.test(body)) {
       res
         .status(400)
         .send({ status: false, message: `body  can not be blank` });
       return;
-    } 
-    if(author_Id.length != 24) { //author_Id validation
-      res.status(400).send({ status: false, message: `put a valid author_Id` });
-      return
     }
-    if (!(/^#?[a-zA-Z0-9 ]+/.test(tags))) { //tags validation
+    if (author_Id.length != 24) {
+      //author_Id validation
+      res.status(400).send({ status: false, message: `put a valid author_Id` });
+      return;
+    }
+    if (!/^#?[a-zA-Z0-9 ]+/.test(tags)) {
+      //tags validation
       res
         .status(400)
         .send({ status: false, message: `tags  can not be empty` });
       return;
     }
-    if (!(/[A-Za-z][A-Za-z0-9_]{1,29}/.test(category))) { //category validation
+    if (!/[A-Za-z][A-Za-z0-9_]{1,29}/.test(category)) {
+      //category validation
       res
         .status(400)
         .send({ status: false, message: `category  can not be empty` });
       return;
     }
-    if (!(/^#?[a-zA-Z0-9 ]+/.test(subcategory))) { //subcategory validation
+    if (!/^#?[a-zA-Z0-9 ]+/.test(subcategory)) {
+      //subcategory validation
       res
         .status(400)
         .send({ status: false, message: `subcategory  can not be empty` });
@@ -78,15 +84,18 @@ exports.createBlog = async function (req, res) {
 
 exports.getBlogs = async function (req, res) {
   try {
-    const data = req.query;
+    const { author_Id, category, tags, subcategory } = req.params;
+    console.log(req.query);
     const foundPost = await BlogModel.find({
       isPublished: true,
       isDeleted: false,
-    }).find(data);
+    }).find(author_Id, category, tags, subcategory);
     if (foundPost.length == 0) {
-     return res.status(400).send({message:"Post not found"});
+      return res.status(400).send({ message: "Post not found" });
     } else {
-      res.status(200).send({ status: true, msg: foundPost });
+      res
+        .status(200)
+        .send({ status: true, results: foundPost.length, msg: foundPost });
     }
   } catch (error) {
     res.status(500).send(err.message);
@@ -130,7 +139,9 @@ exports.deleteBlog = async function (req, res) {
       { _id: blogId },
       { $set: { isDeleted: true } }
     );
-    (data == null || data == undefined)?res.status(404).send({ status: false, msg: " " }):res.status(200).send()
+    data == null || data == undefined
+      ? res.status(404).send({ status: false, msg: " " })
+      : res.status(200).send();
 
     // if (data == null || data == undefined) {
     //  return res.status(404).send({ status: false, msg: " " });
