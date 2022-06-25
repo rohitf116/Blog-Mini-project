@@ -3,10 +3,65 @@ const AuthorModel = require("../Model/authorModel");
 
 exports.createBlog = async function (req, res) {
   try {
-    let authorId = req.body.author_Id;
-    let id = await AuthorModel.find({ _id: authorId }).select({ _id: 1 });
+    const fieldAllowed = [
+      "title",
+      "body",
+      "author_Id",
+      "tags",
+      "category",
+      "subcategory",
+    ];
+    const data = req.body;
+    const keyOf = Object.keys(data);
+    const receivedKey = fieldAllowed.filter((x) => !keyOf.includes(x));
+    console.log(receivedKey)
+    if (receivedKey.length) {
+      res.status(400).send({ status: "fail", msg: `${receivedKey} field is missing` });
+    }
+    // console.log(typeof author_Id)
+    // console.log(author_Id)
+
+   //key_value validation
+    let {title, body, author_Id, tags, category, subcategory} = data
+
+    //title validation
+    if (!(/^(?=.{1,50})/.test(title))) {  
+      return res
+        .status(400)
+        .send({ status: false, message: `title  can not be blank` });
+    }
+    //body validation
+    if (!(/^(?=.{1,1000})/.test(body))) { 
+      res
+        .status(400)
+        .send({ status: false, message: `body  can not be blank` });
+      return;
+    } 
+    if(author_Id.length != 24) { //author_Id validation
+      res.status(400).send({ status: false, message: `put a valid author_Id` });
+      return
+    }
+    if (!(/^#?[a-zA-Z0-9 ]+/.test(tags))) { //tags validation
+      res
+        .status(400)
+        .send({ status: false, message: `tags  can not be empty` });
+      return;
+    }
+    if (!(/[A-Za-z][A-Za-z0-9_]{1,29}/.test(category))) { //category validation
+      res
+        .status(400)
+        .send({ status: false, message: `category  can not be empty` });
+      return;
+    }
+    if (!(/^#?[a-zA-Z0-9 ]+/.test(subcategory))) { //subcategory validation
+      res
+        .status(400)
+        .send({ status: false, message: `subcategory  can not be empty` });
+      return;
+    }
+    let id = await AuthorModel.find({ _id: author_Id }).select({ _id: 1 });
     let blog = id.map((obj) => obj._id.toString());
-    if (authorId == blog) {
+    if (author_Id == blog) {
       let data = req.body;
       let saveData = await BlogModel.create(data);
       return res.status(201).send({

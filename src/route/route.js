@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const authorController = require("../controller/authorController");
 const blogController = require("../controller/blogController");
-const commonMiddleware = require("../middleware/commonMiddleware");
 const auth = require("../middleware/auth");
 const validator = require("../validator/validation");
 
@@ -13,13 +12,11 @@ router.post("/login", authorController.loginUser);
 
 router.post(
   "/authors",
-  validator.authorValidation,
-  commonMiddleware.authorCreation,
-  authorController.authors
+  auth.checkFor,
+  authorController.createAuthors
 );
 router.post(
   "/createBlog",
-  validator.blogValidation,
   auth.authenticate,
   blogController.createBlog
 );

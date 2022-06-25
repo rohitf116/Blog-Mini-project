@@ -6,22 +6,26 @@ exports.authenticate = function (req, res, next) {
     //validate this token
     // console.log(" is die authenticate ");
     let token = req.headers["x-api-key"];
-    if (!token)
-      return res.send({
-        status: false,
-        msg: "token is not present in the headers",
-      });
-
-    const decodedToken = jwt.verify(token, "functionup-radon");
-
-    if (!decodedToken)
-      return res.send({ status: false, msg: "token is not valid" });
-
-    next();
-  } catch (error) {
-    res.status(500).send(error.message);
+    if(!token){
+      res.status(404).send({status:false, msg: "token is not present in headers"})
+    } else{
+      const decodedToken = jwt.verify(token,"functionup-radon",{ algorithm: "RS256" },
+      function(err,token){
+        if(err){
+          return null
+        } else{
+          return token
+        }
+      })
+    if(decodedToken == null){
+      return res.status(401).send({status: false,msg:"invalid token"})
+    }
   }
-};
+    next()
+} catch(err){
+     res.status(500).send(err.message)
+}
+}
 
 exports.authorise = async function (req, res, next) {
   try {
@@ -49,22 +53,16 @@ exports.authorise = async function (req, res, next) {
 };
 
 exports.checkFor = function (req, res, next) {
+  try{
   const token = req.headers["x-api-key"];
-  const { author_Id } = req.body;
+  const author_Id = req.body.author_Id;
   if (!token) {
     res
       .status(400)
       .send({ status: "fail", msg: "JWT must be present in here" });
   } else {
-    const decodedToken = jwt.verify(token,"functionup-radon",{ algorithm: "RS256" },
-      function (err, token) {
-        if (err) {
-          return null;
-        } else {
-          return token;
-        }
-      }
-    );
+    const decodedToken = jwt.verify(token,"functionup-radon")
+      
     if (decodedToken == null) {
       return res.status(403).send({ status: "fail", msg: "Invalid jwt token" });
     }
@@ -72,11 +70,15 @@ exports.checkFor = function (req, res, next) {
     // console.log(userLoggedIn, "+++++++++++++++");
     // console.log(author_Id, "+++++++++++++++");
     // console.log(author_Id == userLoggedIn);
-    author_Id == userLoggedIn
+    (author_Id == userLoggedIn)
       ? next()
       : res.status(400).send({
           status: "fail",
           msg: `This user is not allowed to create blog using someone else Id`,
         });
+  }
+  }catch(err){
+    res.status(500).send(err.message)
+
   }
 };
