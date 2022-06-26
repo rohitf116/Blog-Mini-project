@@ -15,7 +15,6 @@ exports.createAuthors = async function (req, res) {
     }
     //key-value validation
     const { fname, lname, title, email, password } = data;
-    console.log(password.length);
 
     if (!(/^[A-Za-z]{1,29}$/.test(fname))) {
       return res
@@ -29,7 +28,7 @@ exports.createAuthors = async function (req, res) {
       return;
     }
 
-    if (!(title == "Mr") || !title == "Mrs" || !title == "Mrs") {
+    if (!(title == "Mr") || !title == "Mrs" || !title == "Miss") {
       res.status(400).send({ status: false, message: `title is not valid` });
       return;
     }
