@@ -9,7 +9,7 @@ router.get("/blogging", function (req, res) {
 });
 router.post("/login", authorController.loginUser);
 
-router.post("/authors", auth.checkFor, authorController.createAuthors);
+router.post("/authors",  authorController.createAuthors);
 router.post(
   "/createBlog",
   auth.checkFor,

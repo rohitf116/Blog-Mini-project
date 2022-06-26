@@ -15,24 +15,25 @@ exports.createAuthors = async function (req, res) {
     }
     //key-value validation
     const { fname, lname, title, email, password } = data;
+    console.log(password.length);
 
-    if (!/[A-Za-z][A-Za-z0-9_]{1,29}$/.test(fname)) {
+    if (!(/^[A-Za-z]{1,29}$/.test(fname))) {
       return res
         .status(400)
-        .send({ status: false, message: `fname can not be blank` });
+        .send({ status: false, message: `fname is invalid or blank` });
     }
-    if (!/[A-Za-z][A-Za-z0-9_]{1,29}/.test(lname)) {
+    if (!(/^[A-Za-z]{1,29}$/.test(lname))) {
       res
         .status(400)
         .send({ status: false, message: `lname can not be blank` });
       return;
     }
 
-    if (!(title == "Mr") || title == "Mrs" || title == "Mrs") {
+    if (!(title == "Mr") || !title == "Mrs" || !title == "Mrs") {
       res.status(400).send({ status: false, message: `title is not valid` });
       return;
     }
-    if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+    if (!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email))) {
       res.status(400).send({
         status: false,
         message: `${email} should be a valid email address`,
@@ -45,7 +46,7 @@ exports.createAuthors = async function (req, res) {
         .status(404)
         .send({ status: false, msg: "this emailid is already used" });
     }
-    if (!/[A-Za-z][A-Za-z0-9_]{1,29}/.test(password)) {
+    if (!(/[A-Za-z][A-Za-z0-9_@#]{1,29}/.test(password))) {
       res
         .status(400)
         .send({ status: false, message: `password  can not be empty` });

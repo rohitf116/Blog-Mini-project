@@ -16,13 +16,10 @@ exports.createBlog = async function (req, res) {
     const receivedKey = fieldAllowed.filter((x) => !keyOf.includes(x));
     console.log(receivedKey);
     if (receivedKey.length) {
-      res
+      return res
         .status(400)
         .send({ status: "fail", msg: `${receivedKey} field is missing` });
     }
-    // console.log(typeof author_Id)
-    // console.log(author_Id)
-
     //key_value validation
     let { title, body, author_Id, tags, category, subcategory } = data;
 
@@ -84,12 +81,23 @@ exports.createBlog = async function (req, res) {
 
 exports.getBlogs = async function (req, res) {
   try {
-    const { author_Id, category, tags, subcategory } = req.params;
-    console.log(req.query);
+    const author_Id=req.query.author_Id
+    const savedObj={}
+    if(req.query.author_Id) savedObj.author_Id=req.query.author_Id
+    if(req.query.category) savedObj.category=req.query.category
+    if(req.query.tag) savedObj.tags=req.query.tag
+    if(req.query.subcategory) savedObj.subcategory=req.query.subcategory
+    console.log(savedObj)
+    if (author_Id) {
+      if (author_Id.length !== 24) {
+        return res
+          .status(400)
+          .send({ status: "fail", msg: "Invalid author Id" });
+      }}
     const foundPost = await BlogModel.find({
       isPublished: true,
       isDeleted: false,
-    }).find(author_Id, category, tags, subcategory);
+    }).find(savedObj);
     if (foundPost.length == 0) {
       return res.status(400).send({ message: "Post not found" });
     } else {
@@ -98,7 +106,7 @@ exports.getBlogs = async function (req, res) {
         .send({ status: true, results: foundPost.length, msg: foundPost });
     }
   } catch (error) {
-    res.status(500).send(err.message);
+    res.status(500).send(error.message);
   }
 };
 exports.updateblog = async function (req, res) {
