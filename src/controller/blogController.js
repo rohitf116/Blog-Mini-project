@@ -145,17 +145,11 @@ exports.deleteBlog = async function (req, res) {
     let blogId = req.params.blogId;
     let data = await BlogModel.find({ isDeleted: false }).findOneAndUpdate(
       { _id: blogId },
-      { $set: { isDeleted: true } }
+      { $set: { isDeleted: true,deletedAt: Date.now(), } }
     );
     data == null || data == undefined
-      ? res.status(404).send({ status: false, msg: " " })
+      ? res.status(404).send({ status: false, msg: "Post not found" })
       : res.status(200).send();
-
-    // if (data == null || data == undefined) {
-    //  return res.status(404).send({ status: false, msg: " " });
-    // } else {
-    //   res.status(200).send();
-    // }
   } catch (err) {
     res.status(500).send(err.message);
   }
@@ -167,10 +161,10 @@ exports.deleteBlogByQuery = async function (req, res) {
     console.log(blogId);
     let data = await BlogModel.find({ isDeleted: false }).findOneAndUpdate(
       blogId,
-      { $set: { isDeleted: true } }
+      { $set: { isDeleted: true,deletedAt: Date.now(), } }
     );
     if (data == null || data == undefined) {
-      res.status(404).send({ status: false, msg: " " });
+      res.status(404).send({ status: false, msg: "Post not found" });
     } else {
       res.status(200).send();
     }
