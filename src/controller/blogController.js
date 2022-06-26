@@ -157,17 +157,42 @@ exports.deleteBlog = async function (req, res) {
 
 exports.deleteBlogByQuery = async function (req, res) {
   try {
-    let blogId = req.query;
-    console.log(blogId);
-    let data = await BlogModel.find({ isDeleted: false }).findOneAndUpdate(
-      blogId,
+    console.log('hiiiii')
+    const author_Id=req.query.author_Id
+    const savedObj={
+      isDeleted:false
+    }
+    if(req.query.author_Id) savedObj.author_Id=req.query.author_Id
+    if(req.query.category) savedObj.category=req.query.category
+    if(req.query.tag) savedObj.tags=req.query.tag
+    if(req.query.subcategory) savedObj.subcategory=req.query.subcategory
+    if(req.query.subcategory) savedObj.isPublished=req.query.isPublished
+    const size =Object.keys(savedObj).length
+    console.log(savedObj)
+    if(size<=1){
+      return res.status(400).send({ status: "fail", msg: "Please provide valiid query to delete" });
+    }
+
+    console.log(savedObj,"this is savedObj")
+    if (author_Id) {
+      if (author_Id.length !== 24) {
+        return res
+          .status(400)
+          .send({ status: "fail", msg: "Invalid author Id" });
+      }}
+    let data = await BlogModel.findOneAndUpdate(
+      savedObj,
       { $set: { isDeleted: true,deletedAt: Date.now(), } }
     );
+    console.log(data)
+    // if (data == null || data == undefined) {
+    //   return res.status(404).send({ status: false, msg: "Post not found" });
+    // } 
     if (data == null || data == undefined) {
-      res.status(404).send({ status: false, msg: "Post not found" });
-    } else {
-      res.status(200).send();
-    }
+      return res.status(400).send({ status: "fail", msg: "Resource not found" });
+    } 
+    
+    res.status(200).send({ status: true, msg: "" });
   } catch (err) {
     res.status(500).send(err.message);
   }
