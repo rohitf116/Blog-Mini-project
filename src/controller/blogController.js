@@ -21,13 +21,13 @@ exports.createBlog = async function (req, res) {
     let { title, body, author_Id, tags, category, subcategory } = data;
 
     //title validation
-    if (!/^(?=.{1,50})/.test(title)) {
+    if (!(/^(?=.{1,50})/.test(title))) {
       return res
         .status(400)
         .send({ status: false, message: `title  can not be blank` });
     }
     //body validation
-    if (!/^(?=.{1,1000})/.test(body)) {
+    if (!(/^(?=.{1,1000})/.test(body))) {
       res
         .status(400)
         .send({ status: false, message: `body  can not be blank` });
@@ -38,21 +38,21 @@ exports.createBlog = async function (req, res) {
       res.status(400).send({ status: false, message: `put a valid author_Id` });
       return;
     }
-    if (!/^#?[a-zA-Z0-9 ]+/.test(tags)) {
+    if (!(/^#?[a-zA-Z0-9 ]+/.test(tags))) {
       //tags validation
       res
         .status(400)
         .send({ status: false, message: `tags  can not be empty` });
       return;
     }
-    if (!/[A-Za-z][A-Za-z0-9_]{1,29}/.test(category)) {
+    if (!(/[A-Za-z][A-Za-z0-9_]{1,29}/.test(category))) {
       //category validation
       res
         .status(400)
         .send({ status: false, message: `category  can not be empty` });
       return;
     }
-    if (!/^#?[a-zA-Z0-9 ]+/.test(subcategory)) {
+    if (!(/^#?[a-zA-Z0-9 ]+/.test(subcategory))) {
       //subcategory validation
       res
         .status(400)
@@ -158,7 +158,7 @@ exports.deleteBlogByQuery = async function (req, res) {
     if(req.query.isPublished) savedObj.isPublished=req.query.isPublished
     const size =Object.keys(savedObj).length
     console.log(savedObj)
-    if(size<=1){
+    if(size<1){
       return res.status(400).send({ status: "fail", msg: "Please provide valiid query to delete" });
     }
 
