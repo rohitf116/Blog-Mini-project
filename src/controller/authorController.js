@@ -28,7 +28,7 @@ exports.createAuthors = async function (req, res) {
       return;
     }
 
-    if (!(title == "Mr") || !title == "Mrs" || !title == "Miss") {
+    if (!(title == "Mr" || title == "Mrs" || title == "Miss")) {
       res.status(400).send({ status: false, message: `title is not valid` });
       return;
     }

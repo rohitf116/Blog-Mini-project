@@ -7,9 +7,7 @@ exports.createBlog = async function (req, res) {
       "title",
       "body",
       "author_Id",
-      "tags",
-      "category",
-      "subcategory",
+      "category"
     ];
     const data = req.body;
     const keyOf = Object.keys(data);
@@ -87,11 +85,7 @@ exports.getBlogs = async function (req, res) {
     if(req.query.category) savedObj.category=req.query.category
     if(req.query.tag) savedObj.tags=req.query.tag
     if(req.query.subcategory) savedObj.subcategory=req.query.subcategory
-    if(Object.keys(savedObj).length<3){
-      return res
-          .status(400)
-          .send({ status: "fail", msg: "Please provide a query" });
-    }
+
     console.log(savedObj)
     if (author_Id) {
       if (author_Id.length !== 24) {//
