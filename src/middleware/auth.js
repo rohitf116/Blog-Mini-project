@@ -59,43 +59,43 @@ exports.authorise = async function (req, res, next) {
   }
 };
 
-exports.checkFor = function (req, res, next) {
-  try {
-    const token = req.headers["x-api-key"];
-    const author_Id = req.body.author_Id;
-    if (author_Id) {
-      if (author_Id.length !== 24) {
-        return res
-          .status(400)
-          .send({ status: "fail", msg: "Invalid author Id" });
-      }
-    }
-    if (!author_Id)
-      return res
-        .status(400)
-        .send({ status: "fail", msg: "author_Id is missing" });
-    if (!token) {
-      res.status(400).send({ status: "fail", msg: "JWT must be present in here" });
-    } else {
-      const decodedToken = jwt.verify(token, "functionup-radon");
+// exports.checkFor = function (req, res, next) {
+//   try {
+//     const token = req.headers["x-api-key"];
+//     const author_Id = req.body.author_Id;
+//     if (author_Id) {
+//       if (author_Id.length !== 24) {
+//         return res
+//           .status(400)
+//           .send({ status: "fail", msg: "Invalid author Id" });
+//       }
+//     }
+//     if (!author_Id)
+//       return res
+//         .status(400)
+//         .send({ status: "fail", msg: "author_Id is missing" });
+//     if (!token) {
+//       res.status(400).send({ status: "fail", msg: "JWT must be present in here" });
+//     } else {
+//       const decodedToken = jwt.verify(token, "functionup-radon");
 
-      if (decodedToken == null) {
-        return res
-          .status(403)
-          .send({ status: "fail", msg: "Invalid jwt token" });
-      }
-      const userLoggedIn = decodedToken.userId;
-      if (author_Id == userLoggedIn) {
-        next()
-      }
-      else {
-        res.status(400).send({
-          status: "fail",
-          msg: `This user is not allowed to create blog using someone else Id`,
-        });
-      }
-    }
-  } catch (err) {
-    res.status(500).send(err.message);
-  }
-};
+//       if (decodedToken == null) {
+//         return res
+//           .status(403)
+//           .send({ status: "fail", msg: "Invalid jwt token" });
+//       }
+//       const userLoggedIn = decodedToken.userId;
+//       if (author_Id == userLoggedIn) {
+//         next()
+//       }
+//       else {
+//         res.status(400).send({
+//           status: "fail",
+//           msg: `This user is not allowed to create blog using someone else Id`,
+//         });
+//       }
+//     }
+//   } catch (err) {
+//     res.status(500).send(err.message);
+//   }
+// };
