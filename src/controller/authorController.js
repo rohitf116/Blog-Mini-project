@@ -42,7 +42,7 @@ exports.createAuthors = async function (req, res) {
     let presentEmail = await AuthorModel.findOne({ email: email });
     if (presentEmail) {
       return res
-        .status(404)
+        .status(400)
         .send({ status: false, msg: "this emailid is already used" });
     }
     if (!(/[A-Za-z][A-Za-z0-9_@#]{1,29}/.test(password))) {
@@ -68,7 +68,7 @@ exports.loginUser = async function (req, res) {
 
     if (!email)
       return res
-        .status(404)
+        .status(400)
         .send({ status: false, msg: "email must me present" });
     if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
       res.status(400).send({
@@ -79,7 +79,7 @@ exports.loginUser = async function (req, res) {
     }
     if (!password)
       return res
-        .status(404)
+        .status(400)
         .send({ status: false, msg: "password must me present" });
 
     let user = await AuthorModel.findOne({
@@ -98,7 +98,7 @@ exports.loginUser = async function (req, res) {
         "functionup-radon"
       );
       res.setHeader("x-api-key", token);
-      res.send({ status: true, token: token });
+      res.status(200).send({ status: true, token: token });
     }
   } catch (err) {
     res.status(500).send(err.message);

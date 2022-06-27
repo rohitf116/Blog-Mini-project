@@ -1,7 +1,7 @@
 const BlogModel = require("../Model/blogModel");
 const AuthorModel = require("../Model/authorModel");
 
-exports.createBlog = async function (req, res) {
+exports.createBlog = async function (req, res) { 
   try {
     const fieldAllowed = [
       "title",
@@ -81,8 +81,8 @@ exports.createBlog = async function (req, res) {
 exports.getBlogs = async function (req, res) {
   try {
     const author_Id=req.query.author_Id
-    const savedObj={isPublished: true,
-      isDeleted: false}
+    const savedObj={isPublished: true, isDeleted: false}
+    
     if(req.query.author_Id) savedObj.author_Id=req.query.author_Id
     if(req.query.category) savedObj.category=req.query.category
     if(req.query.tag) savedObj.tags=req.query.tag

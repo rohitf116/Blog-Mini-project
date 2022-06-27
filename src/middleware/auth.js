@@ -4,11 +4,10 @@ exports.authenticate = function (req, res, next) {
   try {
     //check the token in request header
     //validate this token
-    // console.log(" is die authenticate ");
     let token = req.headers["x-api-key"];
     if (!token) {
       return res
-        .status(404)
+        .status(401)
         .send({ status: false, msg: "token is not present in headers" });
     } else {
       const decodedToken = jwt.verify(
@@ -39,16 +38,16 @@ exports.authorise = async function (req, res, next) {
     const decodedToken = jwt.verify(token, "functionup-radon");
     let currentPost = req.params.blogId;
     let userLoggedIn = decodedToken.userId;
-    if(currentPost.length !==24){
+    if (currentPost.length !== 24) {
       return res.status(400).send({ status: false, msg: "Please provide valid blog Id" });
     }
     const isCorrect = await BlogModel.findById(currentPost).select({
       author_Id: 1,
       _id: 0,
     });
-    const idOf = isCorrect.author_Id.toString();
+    const idOfBlogid = isCorrect.author_Id.toString();
 
-    if (userLoggedIn == idOf) {
+    if (userLoggedIn == idOfBlogid) {
       next();
     } else {
       res
@@ -76,9 +75,7 @@ exports.checkFor = function (req, res, next) {
         .status(400)
         .send({ status: "fail", msg: "author_Id is missing" });
     if (!token) {
-      res
-        .status(400)
-        .send({ status: "fail", msg: "JWT must be present in here" });
+      res.status(400).send({ status: "fail", msg: "JWT must be present in here" });
     } else {
       const decodedToken = jwt.verify(token, "functionup-radon");
 
@@ -88,12 +85,15 @@ exports.checkFor = function (req, res, next) {
           .send({ status: "fail", msg: "Invalid jwt token" });
       }
       const userLoggedIn = decodedToken.userId;
-      author_Id == userLoggedIn
-        ? next()
-        : res.status(400).send({
-            status: "fail",
-            msg: `This user is not allowed to create blog using someone else Id`,
-          });
+      if (author_Id == userLoggedIn) {
+        next()
+      }
+      else {
+        res.status(400).send({
+          status: "fail",
+          msg: `This user is not allowed to create blog using someone else Id`,
+        });
+      }
     }
   } catch (err) {
     res.status(500).send(err.message);
