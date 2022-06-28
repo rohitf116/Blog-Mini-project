@@ -63,14 +63,14 @@ exports.createAuthors = async function (req, res) {
 
 exports.loginUser = async function (req, res) {
   try {
-    let email = req.body.emailId;
+    let email = req.body.email;
     let password = req.body.password;
 
     if (!email)
       return res
         .status(400)
         .send({ status: false, msg: "email must me present" });
-    if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+    if (!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email))) {
       res.status(400).send({
         status: false,
         message: `email should be a valid email address`,
@@ -87,7 +87,7 @@ exports.loginUser = async function (req, res) {
       password: password,
     });
     if (!user) {
-      res.status(404).send({ msg: "User not  found" });
+      res.status(400).send({ msg: "User not  found" });
     } else {
       let token = jwt.sign(
         {

@@ -125,7 +125,9 @@ exports.updateblog = async function (req, res) {
       },
       { new: true }
     );
-    res.status(201).send({ status: true, msg: "done", data: updatedblog });
+    console.log(updatedblog)
+    if(updatedblog==null ||updatedblog==undefined) return res.status(404).send({ status: false, msg: "Post not found", });
+    res.status(200).send({ status: true, msg: "true", data: updatedblog });
   } catch (err) {
     res.status(500).send({ status: false, msg: "Error", error: err.message });
   }
@@ -159,26 +161,24 @@ exports.deleteBlogByQuery = async function (req, res) {
     const size =Object.keys(savedObj).length
     console.log(savedObj)
     if(size<1){
-      return res.status(400).send({ status: "fail", msg: "Please provide valiid query to delete" });
+      return res.status(400).send({ status: "false", msg: "Please provide valiid query to delete" });
     }
 
-    console.log(savedObj,"this is savedObj")
     if (author_Id) {
       if (author_Id.length !== 24) {
         return res
           .status(400)
-          .send({ status: "fail", msg: "Invalid author Id" });
+          .send({  status: "false", msg: "Invalid author Id" });
       }}
     let data = await BlogModel.findOneAndUpdate(
       savedObj,
       { $set: { isDeleted: true,deletedAt: Date.now(), } }
     );
-    console.log(data)
     if (data == null || data == undefined) {
-      return res.status(404).send({ status: "fail", msg: "Resource not found" });
+      return res.status(404).send({  status: "false", msg: "Resource not found" });
     } 
     
-    res.status(200).send({ status: true, msg: "" });
+    res.status(200).send({ status: true, msg: ""});
   } catch (err) {
     res.status(500).send(err.message);
   }
