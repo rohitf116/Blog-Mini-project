@@ -178,7 +178,7 @@ exports.deleteBlogByQuery = async function (req, res) {
       return res.status(404).send({  status: "false", msg: "Resource not found" });
     } 
     
-    res.status(200).send({ status: true, msg: ""});
+    res.status(200).send("");
   } catch (err) {
     res.status(500).send(err.message);
   }
