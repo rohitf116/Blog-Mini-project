@@ -17,7 +17,7 @@ mongoose
   .catch((error) => console.log(error));
 
 app.use("/", route);
-const PORT =process.env.PORT || 3000
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, function () {
   console.log(`Express app running on port ${PORT}`);
 });

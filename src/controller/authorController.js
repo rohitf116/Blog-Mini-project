@@ -51,7 +51,7 @@ exports.createAuthors = async function (req, res) {
         .send({ status: false, message: `password  can not be empty` });
       return;
     }
-    let saveData = await AuthorModel.create(data);
+    let saveData = await AuthorModel.create({ fname, lname, title, email, password });
     res.status(201).send({
       status: true,
       msg: saveData,

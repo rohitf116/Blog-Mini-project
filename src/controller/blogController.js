@@ -1,7 +1,7 @@
 const BlogModel = require("../Model/blogModel");
 const AuthorModel = require("../Model/authorModel");
 
-exports.createBlog = async function (req, res) { 
+exports.createBlog = async function (req, res) {
   try {
     const fieldAllowed = [
       "title",
@@ -78,21 +78,20 @@ exports.createBlog = async function (req, res) {
 
 exports.getBlogs = async function (req, res) {
   try {
-    const author_Id=req.query.author_Id
-    const savedObj={isPublished: true, isDeleted: false}
-    
-    if(req.query.author_Id) savedObj.author_Id=req.query.author_Id
-    if(req.query.category) savedObj.category=req.query.category
-    if(req.query.tag) savedObj.tags=req.query.tag
-    if(req.query.subcategory) savedObj.subcategory=req.query.subcategory
+    const author_Id = req.query.author_Id
+    const savedObj = { isPublished: true, isDeleted: false }
 
-    console.log(savedObj)
+    if (req.query.author_Id) savedObj.author_Id = req.query.author_Id
+    if (req.query.category) savedObj.category = req.query.category
+    if (req.query.tag) savedObj.tags = req.query.tag
+    if (req.query.subcategory) savedObj.subcategory = req.query.subcategory
     if (author_Id) {
       if (author_Id.length !== 24) {//
         return res
           .status(400)
           .send({ status: "fail", msg: "Invalid author Id" });
-      }}
+      }
+    }
     const foundPost = await BlogModel.find(savedObj);
     if (foundPost.length == 0) {
       return res.status(404).send({ message: "Post not found" });
@@ -126,7 +125,7 @@ exports.updateblog = async function (req, res) {
       { new: true }
     );
     console.log(updatedblog)
-    if(updatedblog==null ||updatedblog==undefined) return res.status(404).send({ status: false, msg: "Post not found", });
+    if (updatedblog == null || updatedblog == undefined) return res.status(404).send({ status: false, msg: "Post not found", });
     res.status(200).send({ status: true, msg: "true", data: updatedblog });
   } catch (err) {
     res.status(500).send({ status: false, msg: "Error", error: err.message });
@@ -137,7 +136,7 @@ exports.deleteBlog = async function (req, res) {
     let blogId = req.params.blogId;
     let data = await BlogModel.find({ isDeleted: false }).findOneAndUpdate(
       { _id: blogId },
-      { $set: { isDeleted: true,deletedAt: Date.now(), } }
+      { $set: { isDeleted: true, deletedAt: Date.now(), } }
     );
     data == null || data == undefined
       ? res.status(404).send({ status: false, msg: "Post not found" })
@@ -149,18 +148,17 @@ exports.deleteBlog = async function (req, res) {
 
 exports.deleteBlogByQuery = async function (req, res) {
   try {
-    const author_Id=req.query.author_Id
-    const savedObj={
-      isDeleted:false
+    const author_Id = req.query.author_Id
+    const savedObj = {
+      isDeleted: false
     }
-    if(req.query.author_Id) savedObj.author_Id=req.query.author_Id
-    if(req.query.category) savedObj.category=req.query.category
-    if(req.query.tag) savedObj.tags=req.query.tag
-    if(req.query.subcategory) savedObj.subcategory=req.query.subcategory
-    if(req.query.isPublished) savedObj.isPublished=req.query.isPublished
-    const size =Object.keys(savedObj).length
-    console.log(savedObj)
-    if(size<1){
+    if (req.query.author_Id) savedObj.author_Id = req.query.author_Id
+    if (req.query.category) savedObj.category = req.query.category
+    if (req.query.tag) savedObj.tags = req.query.tag
+    if (req.query.subcategory) savedObj.subcategory = req.query.subcategory
+    if (req.query.isPublished) savedObj.isPublished = req.query.isPublished
+    const size = Object.keys(savedObj).length
+    if (size < 1) {
       return res.status(400).send({ status: "false", msg: "Please provide valiid query to delete" });
     }
 
@@ -168,16 +166,17 @@ exports.deleteBlogByQuery = async function (req, res) {
       if (author_Id.length !== 24) {
         return res
           .status(400)
-          .send({  status: "false", msg: "Invalid author Id" });
-      }}
+          .send({ status: "false", msg: "Invalid author Id" });
+      }
+    }
     let data = await BlogModel.findOneAndUpdate(
       savedObj,
-      { $set: { isDeleted: true,deletedAt: Date.now(), } }
+      { $set: { isDeleted: true, deletedAt: Date.now() } }
     );
     if (data == null || data == undefined) {
-      return res.status(404).send({  status: "false", msg: "Resource not found" });
-    } 
-    
+      return res.status(404).send({ status: "false", msg: "Resource not found" });
+    }
+
     res.status(200).send("");
   } catch (err) {
     res.status(500).send(err.message);
