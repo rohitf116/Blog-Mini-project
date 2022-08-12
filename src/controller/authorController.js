@@ -1,6 +1,10 @@
 const jwt = require("jsonwebtoken");
 const AuthorModel = require("../Model/authorModel");
 
+const emailRegex=/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+const nameRegex=/^[A-Za-z]{1,29}$/
+const passwordRegex=/[A-Za-z][A-Za-z0-9_@#]{1,29}/
+
 exports.createAuthors = async function (req, res) {
   try {
     //key validtion
@@ -16,12 +20,12 @@ exports.createAuthors = async function (req, res) {
     //key-value validation
     const { fname, lname, title, email, password } = data;
 
-    if (!(/^[A-Za-z]{1,29}$/.test(fname))) {
+    if (!(nameRegex.test(fname))) {
       return res
         .status(400)
         .send({ status: false, message: `fname is invalid or blank` });
     }
-    if (!(/^[A-Za-z]{1,29}$/.test(lname))) {
+    if (!(nameRegex.test(lname))) {
       res
         .status(400)
         .send({ status: false, message: `lname can not be blank` });
@@ -32,7 +36,7 @@ exports.createAuthors = async function (req, res) {
       res.status(400).send({ status: false, message: `title is not valid` });
       return;
     }
-    if (!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email))) {
+    if (!(emailRegex.test(email))) {
       res.status(400).send({
         status: false,
         message: `${email} should be a valid email address`,
@@ -45,7 +49,7 @@ exports.createAuthors = async function (req, res) {
         .status(400)
         .send({ status: false, msg: "this emailid is already used" });
     }
-    if (!(/[A-Za-z][A-Za-z0-9_@#]{1,29}/.test(password))) {
+    if (!(passwordRegex.test(password))) {
       res
         .status(400)
         .send({ status: false, message: `password  can not be empty` });
@@ -63,33 +67,33 @@ exports.createAuthors = async function (req, res) {
 
 exports.loginUser = async function (req, res) {
   try {
-    let email = req.body.email;
-    let password = req.body.password;
+    let {email} = req.body;
+    let {password} = req.body;
 
     if (!email)
       return res
         .status(400)
         .send({ status: false, msg: "email must me present" });
-    if (!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email))) {
-      res.status(400).send({
+    if (!(emailRegex.test(email))) {
+      return res.status(400).send({
         status: false,
         message: `email should be a valid email address`,
       });
-      return;
+     
     }
     if (!password)
       return res
         .status(400)
         .send({ status: false, msg: "password must me present" });
 
-    let user = await AuthorModel.findOne({
+    const user = await AuthorModel.findOne({
       email: email,
       password: password,
     });
     if (!user) {
-      res.status(400).send({ msg: "User not  found" });
+     return res.status(400).send({ msg: "User not  found" });
     } else {
-      let token = jwt.sign(
+      const token = jwt.sign(
         {
           userId: user._id.toString(),
           batch: "Room-24",

@@ -1,6 +1,11 @@
 const BlogModel = require("../Model/blogModel");
 const AuthorModel = require("../Model/authorModel");
 
+const titleRegex=/^(?=.{1,50})/
+const bodyRegex=/^(?=.{1,1000})/
+const tagsRegex=/^#?[a-zA-Z0-9 ]+/
+const categoryRegex=/[A-Za-z][A-Za-z0-9_]{1,29}/
+const subcategoryRegex=/^#?[a-zA-Z0-9 ]+/
 exports.createBlog = async function (req, res) {
   try {
     const fieldAllowed = [
@@ -21,13 +26,13 @@ exports.createBlog = async function (req, res) {
     let { title, body, author_Id, tags, category, subcategory } = data;
 
     //title validation
-    if (!(/^(?=.{1,50})/.test(title))) {
+    if (!(titleRegex.test(title))) {
       return res
         .status(400)
         .send({ status: false, message: `title  can not be blank` });
     }
     //body validation
-    if (!(/^(?=.{1,1000})/.test(body))) {
+    if (!(bodyRegex.test(body))) {
       res
         .status(400)
         .send({ status: false, message: `body  can not be blank` });
@@ -38,21 +43,21 @@ exports.createBlog = async function (req, res) {
       res.status(400).send({ status: false, message: `put a valid author_Id` });
       return;
     }
-    if (!(/^#?[a-zA-Z0-9 ]+/.test(tags))) {
+    if (!(tagsRegex.test(tags))) {
       //tags validation
       res
         .status(400)
         .send({ status: false, message: `tags  can not be empty` });
       return;
     }
-    if (!(/[A-Za-z][A-Za-z0-9_]{1,29}/.test(category))) {
+    if (!(categoryRegex.test(category))) {
       //category validation
       res
         .status(400)
         .send({ status: false, message: `category  can not be empty` });
       return;
     }
-    if (!(/^#?[a-zA-Z0-9 ]+/.test(subcategory))) {
+    if (!(subcategoryRegex.test(subcategory))) {
       //subcategory validation
       res
         .status(400)
@@ -69,7 +74,7 @@ exports.createBlog = async function (req, res) {
         msg: saveData,
       });
     } else {
-      res.status(400).send({ status: false, msg: "author_id is Invalid" });
+      res.status(403).send({ status: false, msg: "author_id is Invalid" });
     }
   } catch (err) {
     res.status(500).send(err.message);
@@ -169,7 +174,7 @@ exports.deleteBlogByQuery = async function (req, res) {
           .send({ status: "false", msg: "Invalid author Id" });
       }
     }
-    let data = await BlogModel.findOneAndUpdate(
+    let data = await BlogModel.findAndUpdate(
       savedObj,
       { $set: { isDeleted: true, deletedAt: Date.now() } }
     );

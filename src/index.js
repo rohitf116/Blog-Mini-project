@@ -4,14 +4,10 @@ const mongoose = require("mongoose");
 const app = express();
 const bodyParser = require("body-parser");
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
 
 mongoose
   .connect(
-    "mongodb+srv://Deepak:Deepak9162@cluster0.uylkg.mongodb.net/bloggingproject",
-    {
-      useNewUrlParser: true,
-    }
+    "mongodb+srv://Deepak:Deepak9162@cluster0.uylkg.mongodb.net/bloggingproject"
   )
   .then(() => console.log("MongoDb is Connected"))
   .catch((error) => console.log(error));
