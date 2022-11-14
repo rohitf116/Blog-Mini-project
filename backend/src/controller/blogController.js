@@ -1,7 +1,8 @@
 const BlogModel = require("../Model/blogModel");
 const AuthorModel = require("../Model/authorModel");
 const jwt = require("jsonwebtoken");
-
+const mongoose = require("mongoose");
+const ObjectId = mongoose.isValidObjectId;
 const titleRegex = /^(?=.{1,50})/;
 const bodyRegex = /^(?=.{1,1000})/;
 const tagsRegex = /^#?[a-zA-Z0-9 ]+/;
@@ -32,7 +33,7 @@ exports.createBlog = async function (req, res) {
         .send({ status: false, message: `body  can not be blank` });
       return;
     }
-    if (author_Id.length != 24) {
+    if (ObjectId(author_Id)) {
       //author_Id validation
       res.status(400).send({ status: false, message: `put a valid author_Id` });
       return;
@@ -79,13 +80,13 @@ exports.getBlogs = async function (req, res) {
   try {
     const author_Id = req.query.author_Id;
     const savedObj = { isPublished: true, isDeleted: false };
-
     if (req.query.author_Id) savedObj.author_Id = req.query.author_Id;
     if (req.query.category) savedObj.category = req.query.category;
     if (req.query.tag) savedObj.tags = req.query.tag;
     if (req.query.subcategory) savedObj.subcategory = req.query.subcategory;
+    console.log(ObjectId(author_Id), "++++++++++++++++++");
     if (author_Id) {
-      if (author_Id.length !== 24) {
+      if (!ObjectId(author_Id)) {
         //
         return res
           .status(400)
