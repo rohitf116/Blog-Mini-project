@@ -94,7 +94,9 @@ exports.getBlogs = async function (req, res) {
     }
     console.log(savedObj);
     const foundPost = await BlogModel.find(savedObj);
-    console.log(foundPost);
+    if (!foundPost.length) {
+      return res.status(404).send({ status: false, msg: "No post found" });
+    }
     res
       .status(200)
       .send({ status: true, results: foundPost.length, msg: foundPost });
@@ -159,7 +161,7 @@ exports.deleteBlogByQuery = async function (req, res) {
     if (req.query.isPublished) savedObj.isPublished = req.query.isPublished;
 
     const size = Object.keys(savedObj).length;
-    if (size < 1) {
+    if (size <= 1) {
       return res.status(400).send({
         status: "false",
         msg: "Please provide valiid query to delete",
@@ -188,16 +190,16 @@ exports.deleteBlogByQuery = async function (req, res) {
           .json({ status: false, msg: "user can only delete their own blogs" });
       }
     }
-    const xx = await BlogModel.findOneAndUpdate(savedObj, {
+    const deletedData = await BlogModel.findOneAndUpdate(savedObj, {
       $set: { isDeleted: true, deletedAt: Date.now() },
     });
-    if (!xx) {
+    if (!deletedData) {
       return res
         .status(404)
-        .send({ status: "false", msg: "Resource not found" });
+        .send({ status: "false", message: "Resource not found" });
     }
 
-    res.status(200).send({ mgs: "blog is deleted" });
+    res.status(200).send({ message: "blog is deleted" });
   } catch (err) {
     res.status(500).send(err.message);
   }
