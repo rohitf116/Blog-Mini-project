@@ -33,7 +33,7 @@ exports.createBlog = async function (req, res) {
         .send({ status: false, message: `body  can not be blank` });
       return;
     }
-    if (ObjectId(author_Id)) {
+    if (!ObjectId(author_Id)) {
       //author_Id validation
       res.status(400).send({ status: false, message: `put a valid author_Id` });
       return;

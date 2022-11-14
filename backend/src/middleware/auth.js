@@ -38,11 +38,14 @@ exports.authenticate = function (req, res, next) {
 exports.authorise = async function (req, res, next) {
   try {
     let token = req.headers["x-api-key"];
-    console.log("authorize");
-    const decodedToken = jwt.verify(token, "functionup-radon");
+    const decodedToken = jwt.verify(token, "functionup-radon", (err, res) => {
+      if (err)
+        return res.status(403).send({ status: false, mgs: "invalid tokens" });
+      return res;
+    });
     let currentPost = req.params.blogId;
     let userLoggedIn = decodedToken.userId;
-    if (ObjectId(currentPost)) {
+    if (!ObjectId(currentPost)) {
       return res
         .status(400)
         .send({ status: false, msg: "Please provide valid blog Id" });
