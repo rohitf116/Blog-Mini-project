@@ -22,6 +22,6 @@ router.put("/blog/:blogId", authenticate, authorise, updateblog); //UpdateBlog A
 
 router.delete("/blog/:blogId", authenticate, authorise, deleteBlog); //DeleteBlog API
 
-router.delete("/blog", deleteBlogByQuery); // Delete by query API
+router.delete("/blog", authenticate, deleteBlogByQuery); // Delete by query API
 
 module.exports = router;

@@ -1,5 +1,6 @@
 const BlogModel = require("../Model/blogModel");
 const AuthorModel = require("../Model/authorModel");
+const jwt = require("jsonwebtoken");
 
 const titleRegex = /^(?=.{1,50})/;
 const bodyRegex = /^(?=.{1,1000})/;
@@ -17,7 +18,6 @@ exports.createBlog = async function (req, res) {
     }
     //key_value validation
     let { title, body, author_Id, tags, category, subcategory } = data;
-    console.log(author_Id, "++++++++");
 
     //title validation
     if (!titleRegex.test(title)) {
@@ -107,10 +107,11 @@ exports.updateblog = async function (req, res) {
     let data = req.body;
     let blogId = req.params.blogId;
     const { title, body, tags, subcategory } = data;
-    let updatedblog = await BlogModel.find({
-      isDeleted: false,
-    }).findOneAndUpdate(
-      { _id: blogId },
+    let updatedblog = await BlogModel.findOneAndUpdate(
+      {
+        isDeleted: false,
+        _id: blogId,
+      },
       {
         $addToSet: { tags: tags, subcategory: subcategory },
         $set: {
@@ -122,7 +123,6 @@ exports.updateblog = async function (req, res) {
       },
       { new: true }
     );
-    console.log(updatedblog);
     if (!updatedblog)
       return res.status(404).send({ status: false, msg: "Post not found" });
     res.status(200).send({ status: true, msg: "true", data: updatedblog });
@@ -157,6 +157,7 @@ exports.deleteBlogByQuery = async function (req, res) {
     if (req.query.tag) savedObj.tags = req.query.tag;
     if (req.query.subcategory) savedObj.subcategory = req.query.subcategory;
     if (req.query.isPublished) savedObj.isPublished = req.query.isPublished;
+
     const size = Object.keys(savedObj).length;
     if (size < 1) {
       return res.status(400).send({
@@ -164,7 +165,6 @@ exports.deleteBlogByQuery = async function (req, res) {
         msg: "Please provide valiid query to delete",
       });
     }
-
     if (author_Id) {
       if (author_Id.length !== 24) {
         return res
@@ -172,16 +172,32 @@ exports.deleteBlogByQuery = async function (req, res) {
           .send({ status: "false", msg: "Invalid author Id" });
       }
     }
-    let data = await BlogModel.findAndUpdate(savedObj, {
+    let token = req.headers["x-api-key"];
+    console.log(token);
+    const decodedToken = jwt.verify(token, "functionup-radon", (err, res) => {
+      if (err)
+        return res.status(401).json({ status: false, msg: "invalid tokens" });
+      return res;
+    });
+    let userLoggedIn = decodedToken.userId;
+    console.log(userLoggedIn, "userLoggedIn");
+    if (req.query.author_Id) {
+      if (userLoggedIn !== req.query.author_Id) {
+        return res
+          .status(403)
+          .json({ status: false, msg: "user can only delete their own blogs" });
+      }
+    }
+    const xx = await BlogModel.findOneAndUpdate(savedObj, {
       $set: { isDeleted: true, deletedAt: Date.now() },
     });
-    if (data == null || data == undefined) {
+    if (!xx) {
       return res
         .status(404)
         .send({ status: "false", msg: "Resource not found" });
     }
 
-    res.status(200).send("");
+    res.status(200).send("blog is deleted");
   } catch (err) {
     res.status(500).send(err.message);
   }

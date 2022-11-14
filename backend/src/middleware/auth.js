@@ -4,6 +4,7 @@ exports.authenticate = function (req, res, next) {
   try {
     //check the token in request header
     //validate this token
+    console.log("authenticate");
     let token = req.headers["x-api-key"];
     if (!token) {
       return res
@@ -35,11 +36,14 @@ exports.authenticate = function (req, res, next) {
 exports.authorise = async function (req, res, next) {
   try {
     let token = req.headers["x-api-key"];
+    console.log("authorize");
     const decodedToken = jwt.verify(token, "functionup-radon");
     let currentPost = req.params.blogId;
     let userLoggedIn = decodedToken.userId;
     if (currentPost.length !== 24) {
-      return res.status(400).send({ status: false, msg: "Please provide valid blog Id" });
+      return res
+        .status(400)
+        .send({ status: false, msg: "Please provide valid blog Id" });
     }
     const isCorrect = await BlogModel.findById(currentPost).select({
       author_Id: 1,
@@ -48,6 +52,7 @@ exports.authorise = async function (req, res, next) {
     const idOfBlogid = isCorrect.author_Id.toString();
 
     if (userLoggedIn == idOfBlogid) {
+      console.log("next");
       next();
     } else {
       res
@@ -58,5 +63,3 @@ exports.authorise = async function (req, res, next) {
     res.status(500).send(error.message);
   }
 };
-
-

@@ -9,8 +9,7 @@ exports.createAuthors = async function (req, res) {
   try {
     //key validtion
     const data = req.body;
-    const keyOf = Object.keys(data);
-    if (!keyOf.length) {
+    if (!Object.keys(data)) {
       return res
         .status(400)
         .send({ status: "fail", msg: `body cannot be empty` });
