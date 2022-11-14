@@ -1,5 +1,7 @@
 const jwt = require("jsonwebtoken");
 const BlogModel = require("../Model/blogModel");
+const mongoose = require("mongoose");
+const ObjectId = mongoose.isValidObjectId;
 exports.authenticate = function (req, res, next) {
   try {
     //check the token in request header
@@ -40,7 +42,7 @@ exports.authorise = async function (req, res, next) {
     const decodedToken = jwt.verify(token, "functionup-radon");
     let currentPost = req.params.blogId;
     let userLoggedIn = decodedToken.userId;
-    if (currentPost.length !== 24) {
+    if (ObjectId(currentPost)) {
       return res
         .status(400)
         .send({ status: false, msg: "Please provide valid blog Id" });
